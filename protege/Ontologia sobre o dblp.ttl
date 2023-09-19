@@ -1,0 +1,559 @@
+@prefix : <http://example.com#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://example.com#> .
+
+<http://example.com> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/nemo/gufo#isDerivedFrom
+gufo:isDerivedFrom rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://example.com#isAffiliate
+:isAffiliate rdf:type owl:ObjectProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :Person ;
+             rdfs:range :Institution .
+
+
+###  http://example.com#publishedBy
+:publishedBy rdf:type owl:ObjectProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :Publication ;
+             rdfs:range :Person .
+
+
+###  http://purl.org/nemo/gufo#inheresIn
+gufo:inheresIn rdf:type owl:ObjectProperty .
+
+
+###  http://purl.org/nemo/gufo#mediates
+gufo:mediates rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://example.com#AccessType
+:AccessType rdf:type owl:Class ;
+            rdfs:subClassOf gufo:IntrinsicMode ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty gufo:inheresIn ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass :Publication
+                            ] .
+
+
+###  http://example.com#Author
+:Author rdf:type owl:Class ;
+        rdfs:subClassOf :Person .
+
+
+###  http://example.com#Closed
+:Closed rdf:type owl:Class ;
+        rdfs:subClassOf :AccessType .
+
+
+###  http://example.com#Coauthor
+:Coauthor rdf:type owl:Class ;
+          rdfs:subClassOf :Person .
+
+
+###  http://example.com#ConferencePaper
+:ConferencePaper rdf:type owl:Class ;
+                 rdfs:subClassOf :Publication .
+
+
+###  http://example.com#CountryName
+:CountryName rdf:type owl:Class ;
+             rdfs:subClassOf gufo:Quality ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty gufo:inheresIn ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Institution
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty gufo:inheresIn ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Publication
+                             ] .
+
+
+###  http://example.com#Editor
+:Editor rdf:type owl:Class ;
+        rdfs:subClassOf :Person .
+
+
+###  http://example.com#Institution
+:Institution rdf:type owl:Class ;
+             rdfs:subClassOf gufo:FunctionalComplex ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :CountryName
+                             ] .
+
+
+###  http://example.com#International
+:International rdf:type owl:Class ;
+               rdfs:subClassOf :PublicationNationalityType ;
+               owl:disjointWith :PublicationNationalityType .
+
+
+###  http://example.com#Journal
+:Journal rdf:type owl:Class ;
+         rdfs:subClassOf :Publication .
+
+
+###  http://example.com#Monograph
+:Monograph rdf:type owl:Class ;
+           rdfs:subClassOf :Publication .
+
+
+###  http://example.com#National
+:National rdf:type owl:Class ;
+          rdfs:subClassOf :PublicationNationalityType .
+
+
+###  http://example.com#ORCID
+:ORCID rdf:type owl:Class ;
+       rdfs:subClassOf gufo:Quality ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty gufo:inheresIn ;
+                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                         owl:onClass :Person
+                       ] .
+
+
+###  http://example.com#Open
+:Open rdf:type owl:Class ;
+      rdfs:subClassOf :AccessType .
+
+
+###  http://example.com#Person
+:Person rdf:type owl:Class ;
+        rdfs:subClassOf gufo:FunctionalComplex ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty [ owl:inverseOf gufo:mediates
+                                         ] ;
+                          owl:someValuesFrom :PublicationNationalityType
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                         ] ;
+                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onClass :ORCID
+                        ] .
+
+
+###  http://example.com#Publication
+:Publication rdf:type owl:Class ;
+             rdfs:subClassOf gufo:FunctionalComplex ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:mediates
+                                              ] ;
+                               owl:someValuesFrom :PublicationNationalityType
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :AccessType
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :CountryName
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Serie
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Title
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :URL
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Volume
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty [ owl:inverseOf gufo:inheresIn
+                                              ] ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass :Year
+                             ] .
+
+
+###  http://example.com#PublicationNationalityType
+:PublicationNationalityType rdf:type owl:Class ;
+                            rdfs:subClassOf gufo:Relator ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty gufo:mediates ;
+                                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                              owl:onClass :Person
+                                            ] ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty gufo:mediates ;
+                                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                              owl:onClass :Publication
+                                            ] .
+
+
+###  http://example.com#Serie
+:Serie rdf:type owl:Class ;
+       rdfs:subClassOf gufo:Quality ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty gufo:inheresIn ;
+                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                         owl:onClass :Publication
+                       ] .
+
+
+###  http://example.com#Title
+:Title rdf:type owl:Class ;
+       rdfs:subClassOf gufo:Quality ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty gufo:inheresIn ;
+                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                         owl:onClass :Publication
+                       ] .
+
+
+###  http://example.com#URL
+:URL rdf:type owl:Class ;
+     rdfs:subClassOf gufo:Quality ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty gufo:inheresIn ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                       owl:onClass :Publication
+                     ] .
+
+
+###  http://example.com#Unavailable
+:Unavailable rdf:type owl:Class ;
+             rdfs:subClassOf :AccessType .
+
+
+###  http://example.com#Volume
+:Volume rdf:type owl:Class ;
+        rdfs:subClassOf gufo:Quality ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty gufo:inheresIn ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onClass :Publication
+                        ] .
+
+
+###  http://example.com#WorkshopPaper
+:WorkshopPaper rdf:type owl:Class ;
+               rdfs:subClassOf :Publication .
+
+
+###  http://example.com#Year
+:Year rdf:type owl:Class ;
+      rdfs:subClassOf gufo:Quality ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty gufo:inheresIn ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                        owl:onClass :Publication
+                      ] .
+
+
+###  http://purl.org/nemo/gufo#Category
+gufo:Category rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#FunctionalComplex
+gufo:FunctionalComplex rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#IntrinsicMode
+gufo:IntrinsicMode rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#Kind
+gufo:Kind rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#MaterialRelationshipType
+gufo:MaterialRelationshipType rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#Phase
+gufo:Phase rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#Quality
+gufo:Quality rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#Relator
+gufo:Relator rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#Role
+gufo:Role rdf:type owl:Class .
+
+
+###  http://purl.org/nemo/gufo#SubKind
+gufo:SubKind rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://example.com#AccessType
+:AccessType rdf:type owl:NamedIndividual ,
+                     gufo:Kind .
+
+
+###  http://example.com#Author
+:Author rdf:type owl:NamedIndividual ,
+                 gufo:Role .
+
+
+###  http://example.com#Closed
+:Closed rdf:type owl:NamedIndividual ,
+                 gufo:Phase .
+
+
+###  http://example.com#Coauthor
+:Coauthor rdf:type owl:NamedIndividual ,
+                   gufo:Role .
+
+
+###  http://example.com#ConferencePaper
+:ConferencePaper rdf:type owl:NamedIndividual ,
+                          gufo:Kind .
+
+
+###  http://example.com#CountryName
+:CountryName rdf:type owl:NamedIndividual ,
+                      gufo:Kind .
+
+
+###  http://example.com#Editor
+:Editor rdf:type owl:NamedIndividual ,
+                 gufo:Role .
+
+
+###  http://example.com#Institution
+:Institution rdf:type owl:NamedIndividual ,
+                      gufo:Kind .
+
+
+###  http://example.com#International
+:International rdf:type owl:NamedIndividual ,
+                        gufo:SubKind .
+
+
+###  http://example.com#Journal
+:Journal rdf:type owl:NamedIndividual ,
+                  gufo:Kind .
+
+
+###  http://example.com#Monograph
+:Monograph rdf:type owl:NamedIndividual ,
+                    gufo:Kind .
+
+
+###  http://example.com#National
+:National rdf:type owl:NamedIndividual ,
+                   gufo:SubKind .
+
+
+###  http://example.com#ORCID
+:ORCID rdf:type owl:NamedIndividual ,
+                gufo:Kind .
+
+
+###  http://example.com#Open
+:Open rdf:type owl:NamedIndividual ,
+               gufo:Phase .
+
+
+###  http://example.com#Person
+:Person rdf:type owl:NamedIndividual ,
+                 gufo:Kind .
+
+
+###  http://example.com#Publication
+:Publication rdf:type owl:NamedIndividual ,
+                      gufo:Category .
+
+
+###  http://example.com#PublicationNationalityType
+:PublicationNationalityType rdf:type owl:NamedIndividual ,
+                                     gufo:Kind .
+
+
+###  http://example.com#Serie
+:Serie rdf:type owl:NamedIndividual ,
+                gufo:Kind .
+
+
+###  http://example.com#Title
+:Title rdf:type owl:NamedIndividual ,
+                gufo:Kind .
+
+
+###  http://example.com#URL
+:URL rdf:type owl:NamedIndividual ,
+              gufo:Kind .
+
+
+###  http://example.com#Unavailable
+:Unavailable rdf:type owl:NamedIndividual ,
+                      gufo:Phase .
+
+
+###  http://example.com#Volume
+:Volume rdf:type owl:NamedIndividual ,
+                 gufo:Kind .
+
+
+###  http://example.com#WorkshopPaper
+:WorkshopPaper rdf:type owl:NamedIndividual ,
+                        gufo:Kind .
+
+
+###  http://example.com#Year
+:Year rdf:type owl:NamedIndividual ,
+               gufo:Kind .
+
+
+###  http://example.com#isAffiliate
+:isAffiliate rdf:type owl:NamedIndividual ,
+                      gufo:MaterialRelationshipType .
+
+
+###  http://example.com#publishedBy
+:publishedBy rdf:type owl:NamedIndividual ,
+                      gufo:MaterialRelationshipType .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+:AccessType rdfs:label "AccessType"@en .
+
+
+:Author rdfs:label "Author"@en .
+
+
+:Closed rdfs:label "Closed"@en .
+
+
+:Coauthor rdfs:label "Coauthor"@en .
+
+
+:ConferencePaper rdfs:label "ConferencePaper"@en .
+
+
+:CountryName rdfs:label "CountryName"@en .
+
+
+:Editor rdfs:label "Editor"@en .
+
+
+:Institution rdfs:label "Institution"@en .
+
+
+:International rdfs:label "International"@en .
+
+
+:Journal rdfs:label "Journal"@en .
+
+
+:Monograph rdfs:label "Monograph"@en .
+
+
+:National rdfs:label "National"@en .
+
+
+:ORCID rdfs:label "ORCID"@en .
+
+
+:Open rdfs:label "Open"@en .
+
+
+:Person rdfs:label "Person"@en .
+
+
+:Publication rdfs:label "Publication"@en .
+
+
+:PublicationNationalityType gufo:isDerivedFrom :publishedBy ;
+                            rdfs:label "PublicationNationalityType"@en .
+
+
+:Serie rdfs:label "Serie"@en .
+
+
+:Title rdfs:label "Title"@en .
+
+
+:URL rdfs:label "URL"@en .
+
+
+:Unavailable rdfs:label "Unavailable"@en .
+
+
+:Volume rdfs:label "Volume"@en .
+
+
+:WorkshopPaper rdfs:label "WorkshopPaper"@en .
+
+
+:Year rdfs:label "Year"@en .
+
+
+:isAffiliate rdfs:label "isAffiliate"@en .
+
+
+:publishedBy rdfs:label "publishedBy"@en .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Institution
+                :Person
+                :Publication
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi
